@@ -1,9 +1,9 @@
 const Joi = require('@hapi/joi');
-const { MyError } = require('../helpers/myError');
+
 const authorValidate = Joi.object({
     name: Joi.string().required().messages({
         'string.base': 'NAME_MUST_BE_STRING',
-        'any.required': 'NAME_REQUIRED'
+        'any.required': 'NAME_IS_REQUIRED'
     }),
     note: Joi.string().messages({
         'string.base': 'NOTE_MUST_BE_STRING'
@@ -16,9 +16,6 @@ const authorValidate = Joi.object({
     }),
     birthDay: Joi.date().messages({
         'date.base': 'INVALID_DATE'
-    }),
-    books: Joi.array().messages({
-        'array.base': 'INVALID_BOOKS'
     })
 });
 
