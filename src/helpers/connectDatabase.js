@@ -8,7 +8,8 @@ function getDatabaseUri() {
 mongoose.set('useFindAndModify', false);
 mongoose.connect(getDatabaseUri(), {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true
 })
     .then(result => console.log('Database connected !!!'))
     .catch(error => {

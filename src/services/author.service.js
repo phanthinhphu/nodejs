@@ -4,15 +4,20 @@ const { Author } = require('../models/author.model');
 const { authorValidate } = require('../validates/author.validate');
 
 class AuthorService {
+
     static getAll() {
         return Author.find({});
     }
 
+    static getId(_id) {
+        const author = Author.findById(_id);
+        if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
+        return author;
+    }
+
     static async createAuthor(content) {
         await authorValidate.validateAsync(content)
-            .catch(error => {
-                throw new MyError(error.message, 400);
-            });
+            .catch(error => { throw new MyError(error.message, 400); });
         const author = new Author(content);
         return await author.save();
     }
@@ -20,9 +25,7 @@ class AuthorService {
     static async updateAuthor(_id, content) {
         checkObjectId(_id);
         await authorValidate.validateAsync(content)
-            .catch(error => {
-                throw new MyError(error.message, 400);
-            });
+            .catch(error => { throw new MyError(error.message, 400); });
         const author = await Author.findByIdAndUpdate(_id, content, { new: true });
         if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
         return author;

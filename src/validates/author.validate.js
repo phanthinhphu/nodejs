@@ -14,8 +14,10 @@ const authorValidate = Joi.object({
     penName: Joi.string().messages({
         'string.base': 'PENNAME_MUST_BE_STRING'
     }),
-    birthDay: Joi.date().messages({
-        'date.base': 'INVALID_DATE'
+    birthDay: Joi.date().iso().messages({
+        'date.base': 'INVALID_DATE',
+        'date.strict' : 'INVALID_DATE',
+        'date.format' : 'BIRTHDAY_FORMAT_YYYY-MM-DD'
     })
 });
 
