@@ -5,6 +5,7 @@ const { routerBook } = require('./controllers/book.router');
 const { routerReader } = require('./controllers/reader.router');
 const { routerCard } = require('./controllers/card.router');
 const { routerTypeBook } = require('./controllers/typeBook.router');
+const { routerUser } = require('./controllers/user.router');
 const app = express();
 
 app.use(json());
@@ -22,5 +23,5 @@ app.use('/book', routerBook);
 app.use('/reader', routerReader);
 app.use('/card', routerCard);
 app.use('/typeBook',routerTypeBook);
-
+app.use('/user',routerUser);
 module.exports = { app };

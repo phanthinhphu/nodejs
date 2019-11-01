@@ -3,7 +3,7 @@ const todate = new Date().toISOString().slice(0, 10);
 const cardValidate = Joi.object({
     seriesNumber: Joi.string().length(10).empty().alphanum().required().messages({
         'string.length': 'SERIESNUMBER_LENGTH_10',
-        'any.required': 'SERIESNUMBER_IS_REQUIRED',
+        'any.required': 'REQUIRED_SERIESNUMBER',
         'string.empty': 'SERIESNUMBER_CAN_NOT_EMPTY',
         'string.alphanum': 'SERIESNUMER_CAN_NOT_SPECIAL_CHARACTER'
     }),
@@ -15,7 +15,7 @@ const cardValidate = Joi.object({
     }),
     endDate: Joi.date().iso().greater(Joi.ref('startDate')).required().messages({
         'date.base': 'INVALID_ENDDATE',
-        'any.required': 'ENDDATE_IS_REQUIRED',
+        'any.required': 'REQUIRED_ENDDATE',
         'date.format': 'ENDDATE_FORMAT_YYYY_MM_DD',
         'date.greater': 'ENDDAY_GREATER_THAN_STARTDAY'
     }),
