@@ -4,6 +4,7 @@ const { Author } = require('../models/author.model');
 const { MyError } = require('../helpers/myError');
 const { checkObjectId } = require('../helpers/checkObjectId');
 const { TypeBook } = require('../models/typeBook.model');
+const { Publisher } = require('../models/publisher.model');
 class BookService {
 
     static getAll() {
@@ -13,23 +14,29 @@ class BookService {
     static async createBook(content) {
         const idAuthor = content.author;
         const idTypeBook = content.typeBook;
-        checkObjectId(idAuthor, idTypeBook);
+        const idPublisher = content.publisher;
+        checkObjectId(idAuthor, idTypeBook,idPublisher);
         await bookValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400); });
         const book = new Book(content);
 
         const pushBook = { $push: { books: book._id } };
+
         const author = await Author.findByIdAndUpdate(idAuthor, pushBook);
         if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
+
         const typeBook = await TypeBook.findByIdAndUpdate(idTypeBook, pushBook);
         if (!typeBook) throw new MyError('CAN_NOT_FIND_TYPEBOOK');
-
+        
+        const publisher = await Publisher.findByIdAndUpdate(idPublisher,pushBook);
+        if(!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER',404);
         return book.save();
     }
 
     static async updateBook(idBook, content) {
         const idAuthor = content.author;
         const idTypeBook = content.typeBook;
+        const idPublisher = content.publisher;
         checkObjectId(idBook, idAuthor, idTypeBook);
         await bookValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400) });
@@ -49,6 +56,9 @@ class BookService {
         const typeBook = await typeBook.findByIdAndUpdate(idTypeBook, setBook);
         if (!typeBook) throw new MyError('CAN_NOT_FIND_TYPEBOOK', 404);
 
+        await Publisher.findOneAndUpdate(filterBook,pullBook);
+        const publisher = await Publisher.findByIdAndUpdate(idPublisher,setBook);
+        if(!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER',404);
 
         return book;
     }
@@ -62,7 +72,8 @@ class BookService {
         const filterBook = { books: idBook };
 
         await Author.findOneAndUpdate(filterBook, pullBook);
-        await TypeBook.findOneAndUpdate(filterBook, pullBook);;
+        await TypeBook.findOneAndUpdate(filterBook, pullBook);
+        await Publisher.findOneAndUpdate(filterBook,pullBook)
         return book;
     }
 }
