@@ -8,6 +8,12 @@ routerPublisher.get('/', (req, res) => {
         .catch(res.onError);
 });
 
+routerPublisher.get('/:_id', (req, res) => {
+    PublisherService.getById(req.params._id)
+        .then(publisher => { res.send({ success: true, publisher }) })
+        .catch(res.onError);
+})
+
 routerPublisher.post('/', (req, res) => {
     PublisherService.createPublisher(req.body)
         .then(publisher => { res.send({ success: true, publisher }) })

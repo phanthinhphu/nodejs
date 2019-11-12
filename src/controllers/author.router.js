@@ -8,6 +8,12 @@ routerAuthor.get('/', (req, res) => {
         .catch(res.onError);
 });
 
+routerAuthor.get('/:_id', (req, res) => {
+    AuthorService.getById(req.params._id)
+        .then(author => res.send({ success: true, author }))
+        .catch(res.onError);
+});
+
 routerAuthor.post('/', async (req, res) => {
     AuthorService.createAuthor(req.body)
         .then(author => res.send({ success: true, author }))

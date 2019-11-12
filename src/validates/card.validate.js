@@ -1,12 +1,6 @@
 const Joi = require('@hapi/joi');
 const todate = new Date().toISOString().slice(0, 10);
 const cardValidate = Joi.object({
-    seriesNumber: Joi.string().length(10).empty().alphanum().required().messages({
-        'string.length': 'SERIESNUMBER_LENGTH_10',
-        'any.required': 'REQUIRED_SERIESNUMBER',
-        'string.empty': 'SERIESNUMBER_CAN_NOT_EMPTY',
-        'string.alphanum': 'SERIESNUMER_CAN_NOT_SPECIAL_CHARACTER'
-    }),
     startDate: Joi.date().iso().required().min(todate).messages({
         'data.base': 'INVALID_STARTDATE',
         'any.required': 'STARTDATE_IS_REQUIRED',

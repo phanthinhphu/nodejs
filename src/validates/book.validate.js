@@ -16,6 +16,7 @@ const bookValidate = Joi.object({
         'number.less': 'PRICE_MUST_BE_LESS_THAN_100000000',
         'any.requuired' : 'REQUIRED_PRICE'
     }),
+    status: Joi.boolean(),
     author : Joi.string()
 });
 

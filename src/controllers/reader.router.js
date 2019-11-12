@@ -8,6 +8,8 @@ routerReader.get('/', (req, res) => {
         .catch(res.onError);
 })
 
+
+
 routerReader.post('/', (req, res) => {
     ReaderService.createReader(req.body)
         .then(reader => { res.send({ success: true, reader }) })

@@ -4,8 +4,20 @@ const { TypeBookService } = require('../services/typeBook.service');
 
 routerTypeBook.get('/', (req, res) => {
     TypeBookService.getAll()
-        .then(typeBook => { res.send({ success: true, typeBook }) })
+        .then(typeBooks => { res.send({ success: true, typeBooks }) })
         .catch(res.onError);
+});
+
+routerTypeBook.get('/',(req,res)=>{
+    TypeBookService.getById(req.params._id)
+    .then(reader=>res.send({success: true,reader}))
+    .catch(res.onError)
+});
+
+routerTypeBook.get('/:_id', (req, res) => {
+    TypeBookService.getById(req.params._id)
+        .then(typeBook => { res.send({ success: true, typeBook }) })
+        .catch(res.onError)
 });
 
 routerTypeBook.post('/', (req, res) => {

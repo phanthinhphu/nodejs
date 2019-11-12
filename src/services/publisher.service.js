@@ -6,7 +6,13 @@ const { MyError } = require('../helpers/myError');
 class PublisherService {
 
     static getAll() {
-        return Publisher.find({});
+        return Publisher.find({}, { books: 0 });
+    }
+
+    static async getById(_id){
+        const publisher = await Publisher.findById(_id);
+        if(!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER',400)
+        return this.getObjectPublisher(publisher);
     }
 
     static async createPublisher(content) {
@@ -15,7 +21,8 @@ class PublisherService {
         const findEmail = await Publisher.findOne({ email: content.email });
         if (findEmail) throw new MyError('EMAIL_EXIST', 400);
         const publisher = new Publisher(content);
-        return publisher.save();
+        const savePublisher = await publisher.save();
+        return this.getObjectPublisher(savePublisher);
     }
 
     static async updatePublisher(_id, content) {
@@ -25,15 +32,22 @@ class PublisherService {
 
         const publisher = await Publisher.findByIdAndUpdate(_id, content, { new: true });
         if (!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER', 404);
-        return publisher;
+        return this.getObjectPublisher(publisher);
     }
 
     static async removePublisher(_id) {
         checkObjectId(_id);
         const publisher = await Publisher.findByIdAndRemove(_id);
         if (!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER', 404);
-        return publisher;
+        return this.getObjectPublisher(publisher);
+    }
+
+    static async getObjectPublisher(publisher) {
+        const newPublisher = publisher.toObject();
+        delete newPublisher.books;
+        return newPublisher;
     }
 }
+
 
 module.exports = { PublisherService };

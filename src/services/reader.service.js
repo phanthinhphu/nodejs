@@ -2,12 +2,15 @@ const { Reader } = require('../models/reader.model');
 const { checkObjectId } = require('../helpers/checkObjectId');
 const { MyError } = require('../helpers/myError');
 const { readerValidate } = require('../validates/reader.validate');
-const { Card } = require('../models/card.model');
 
 class ReaderService {
 
     static getAll() {
         return Reader.find({});
+    }
+
+    static getById(_id) {
+        return Reader.findById(_id, { cards: 0 });
     }
 
     static async getId(_id) {
@@ -29,7 +32,7 @@ class ReaderService {
         checkObjectId(idReader);
         await readerValidate.validateAsync()
             .catch(error => { throw new MyError(error.message, 400); });
-        const reader = Reader.findByIdAndUpdate(idReader, content,{new: true});
+        const reader = Reader.findByIdAndUpdate(idReader, content, { new: true });
         if (!reader) throw new MyError('CAN_NOT_FIND_READER', 404);
         return reader;
     }

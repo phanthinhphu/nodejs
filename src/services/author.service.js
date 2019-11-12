@@ -6,11 +6,11 @@ const { authorValidate } = require('../validates/author.validate');
 class AuthorService {
 
     static getAll() {
-        return Author.find({});
+        return Author.find({}, { books: 0 });
     }
 
-    static getId(_id) {
-        const author = Author.findById(_id);
+    static getById(_id) {
+        const author = Author.findById(_id, { books: 0 });
         if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
         return author;
     }
@@ -19,7 +19,8 @@ class AuthorService {
         await authorValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400); });
         const author = new Author(content);
-        return await author.save();
+        const objAuthor = await author.save();
+        return this.getObjectAuthor(objAuthor);
     }
 
     static async updateAuthor(_id, content) {
@@ -28,14 +29,20 @@ class AuthorService {
             .catch(error => { throw new MyError(error.message, 400); });
         const author = await Author.findByIdAndUpdate(_id, content, { new: true });
         if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
-        return author;
+        return this.getObjectAuthor(author);
     }
 
     static async removeAuthor(_id) {
         checkObjectId(_id);
         const author = await Author.findByIdAndRemove(_id);
         if (!author) throw new MyError('CAN_NOT_FIND_AUTHOR', 404);
-        return author;
+        return this.getObjectAuthor(author);
+    }
+
+    static getObjectAuthor(author) {
+        const objAuthor = author.toObject();
+        delete objAuthor.books;
+        return objAuthor;
     }
 }
 
