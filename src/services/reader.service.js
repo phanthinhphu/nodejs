@@ -13,34 +13,35 @@ class ReaderService {
         return Reader.findById(_id, { cards: 0 });
     }
 
-    static async getId(_id) {
-        checkObjectId(_id);
-        const reader = await Reader.findById(_id);
-        if (!reader) throw new MyError('CAN_NOT_FIND_READER', 404);
-        return reader;
-    }
 
     static async createReader(content) {
+        console.log(content);
         await readerValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400); })
-
         const reader = new Reader(content);
-        return reader.save();
+        const saveReader = await reader.save();
+        return this.getObjetReader(saveReader);
     }
 
     static async updateReader(idReader, content) {
         checkObjectId(idReader);
         await readerValidate.validateAsync()
             .catch(error => { throw new MyError(error.message, 400); });
-        const reader = Reader.findByIdAndUpdate(idReader, content, { new: true });
+        const reader = await Reader.findByIdAndUpdate(idReader, content, { new: true });
         if (!reader) throw new MyError('CAN_NOT_FIND_READER', 404);
-        return reader;
+        return this.getObjetReader(reader);
     }
 
     static async removeReader(_id) {
         const reader = await Reader.findByIdAndRemove(_id);
         if (!reader) throw new MyError('CAN_NOT_FIND_READER', 404);
-        return reader;
+        return this.getObjetReader(reader);
+    }
+
+    static getObjetReader(reader){
+        const newReader = reader.toObject();
+        delete newReader.cards;
+        return  newReader;
     }
 }
 module.exports = { ReaderService };

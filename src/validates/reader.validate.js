@@ -14,10 +14,8 @@ const readerValidate = Joi.object({
         'any.Required': 'REQUIRED_BIRTHDAY',
         'date.format': 'BIRTHDAT_FORMAT_YYYY_MM_DD'
     }),
-    phone: Joi.string().pattern(/^[0-9]+$/).min(5).max(10).messages({
+    phone: Joi.string().pattern(/^[0-9]{10}$/).messages({
         'string.pattern.base': 'PHONE_INVALID',
-        'string.min': 'PHONE_MIN_LENGTH_5',
-        'string.max': 'PHONE_MAX_LENGTH_10'
     })
 });
 

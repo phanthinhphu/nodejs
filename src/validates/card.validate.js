@@ -7,7 +7,7 @@ const cardValidate = Joi.object({
         'date.format': 'STARTDATE_FORMAT_YYYY_MM_DD',
         'date.min': 'STARTDAT_BIGGER_TO_DAY'
     }),
-    endDate: Joi.date().iso().greater(Joi.ref('startDate')).required().messages({
+    endDate: Joi.date().iso().required().messages({
         'date.base': 'INVALID_ENDDATE',
         'any.required': 'REQUIRED_ENDDATE',
         'date.format': 'ENDDATE_FORMAT_YYYY_MM_DD',

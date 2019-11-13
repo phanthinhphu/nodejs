@@ -17,6 +17,10 @@ class CardService {
         return card;
     }
 
+    static getComboboxReader() {
+        return Reader.find({});
+    }
+
     static async createCard(content) {
         const idReader = content.reader;
         checkObjectId(idReader);
