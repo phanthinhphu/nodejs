@@ -10,15 +10,20 @@ class PublisherService {
     }
 
     static async getById(_id){
+
+        checkObjectId(_id);
+
         const publisher = await Publisher.findById(_id);
         if(!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER',400)
         return this.getObjectPublisher(publisher);
     }
 
     static async createPublisher(content) {
+
         await publisherValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400) })
-        const findEmail = await Publisher.findOne({ email: content.email });
+       
+            const findEmail = await Publisher.findOne({ email: content.email });
         if (findEmail) throw new MyError('EMAIL_EXIST', 400);
         const publisher = new Publisher(content);
         const savePublisher = await publisher.save();
@@ -26,7 +31,9 @@ class PublisherService {
     }
 
     static async updatePublisher(_id, content) {
+        
         checkObjectId(_id);
+        
         await publisherValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400) });
 
@@ -36,7 +43,9 @@ class PublisherService {
     }
 
     static async removePublisher(_id) {
+        
         checkObjectId(_id);
+        
         const publisher = await Publisher.findByIdAndRemove(_id);
         if (!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER', 404);
         return this.getObjectPublisher(publisher);

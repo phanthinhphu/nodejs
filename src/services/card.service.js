@@ -11,63 +11,76 @@ class CardService {
     }
 
     static async getById(_id) {
+
         checkObjectId(_id);
-        const card = await Card.findById(_id);
+
+        const card = await Card.findById(_id).populate('reader', 'name');
         if (!card) throw new MyError('CAN_NOT_FIND_CARD', 404);
         return card;
     }
 
     static getComboboxReader() {
-        return Reader.find({});
+        return Reader.find({}).select('_id name phone');
     }
 
     static async createCard(content) {
+
         const idReader = content.reader;
+
         checkObjectId(idReader);
 
         await cardValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400) })
 
-        const findSeries = await Card.findOne({ seriesNumber: content.seriesNumber });
-        if (findSeries) throw new MyError('SERIESNUMBER_EXIST', 400);
-
-        const seriesNumberExist = await Reader.findOne({ cards: idReader });
-        if (seriesNumberExist) throw new MyError('SERIESNUMBER_EXIST', 400);
+        const options = {
+            reader: idReader,
+            endDate: { $gte: content.startDate }
+        };
+        
+        const checkStartDate = await Card.findOne(options);
+        if (checkStartDate) throw new MyError('CARD_UNEXPIRED', 400);
 
         const card = new Card(content);
-        const pushCard = { $push: { cards: card._id } };
-        const reader = await Reader.findByIdAndUpdate(idReader, pushCard, { new: true });
+        const addToset = { $addToSet: { cards: card._id } };
+        const reader = await Reader.findByIdAndUpdate(idReader, addToset, { new: true });
         if (!reader) throw new MyError('CAN_NOT_FIND_READER')
-        return card.save();
+        
+        const saveCard = await card.save();
+        
+        return Card.populate(saveCard, { path: 'reader', select: 'name' })
     }
 
     static async updateCard(idCard, content) {
+
         const idReader = content.reader;
-        const series = content.seriesNumber;
+
         checkObjectId(idCard, idReader);
+
         await cardValidate.validateAsync(content)
             .catch(error => { throw new MyError(error.message, 400) });
 
-        const findCard = await Card.findById(idCard);
-        if (findCard.seriesNumber != series)
-            throw new MyError('INVALID_SERIESNUMBER');
-
         const card = await Card.findByIdAndUpdate(idCard, content, { new: true });
         if (!card) throw new MyError('CAN_NOT_FIND_CARD', 404);
+        
         const pullReader = { $pull: { cards: idCard } };
         await Reader.findOneAndUpdate({ cards: idCard }, pullReader);
-        const pushCard = { $push: { cards: idCard } };
-        await Reader.findByIdAndUpdate(idReader, pushCard);
-        return card;
+        
+        const addToset = { $addToset: { cards: idCard } };
+        await Reader.findByIdAndUpdate(idReader, addToset);
+
+        return Card.populate(card, { path: 'reader', select: 'name' });
     }
 
     static async removeCard(idCard) {
+
         checkObjectId(idCard);
+       
         const card = await Card.findByIdAndRemove(idCard);
         if (!card) throw new MyError('CAN_NOT_FIND_CARD', 404);
         const pullCard = { $pull: { cards: idCard } };
+
         await Reader.findOneAndUpdate({ cards: idCard }, pullCard);
-        return card;
+        return Card.populate(card, { path: 'reader', select: 'name' });
     }
 }
 

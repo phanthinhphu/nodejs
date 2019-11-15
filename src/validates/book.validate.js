@@ -17,7 +17,18 @@ const bookValidate = Joi.object({
         'any.requuired' : 'REQUIRED_PRICE'
     }),
     status: Joi.boolean(),
-    author : Joi.string()
+    author : Joi.string().required().messages({
+        'string.base' : 'AUTHOR_MUST_BE_STRING',
+        'any.required' : 'REQUIRED_AUTHOR'
+    }),
+    publisher : Joi.string().required().messages({
+        'string.base' : 'PUBLISHER_MUST_BE_STRING',
+        'any.required' : 'REQUIRED_PUBLISHER'
+    }),
+    typeBooks : Joi.array().required().messages({
+        'array.base': 'TYPEBOOKS_MUST_BE_ARRAY',
+        'any.required' : 'REQUIRED_TYPEBOOK'
+    })
 });
 
 module.exports = { bookValidate }
