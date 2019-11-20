@@ -64,7 +64,7 @@ class BookService {
         if (!publisher) throw new MyError('CAN_NOT_FIND_PUBLISHER', 404);
         const saveBook = await book.save();
 
-        return book.populate(saveBook, bookPopulate)
+        return Book.populate(saveBook, bookPopulate)
     }
 
     static async updateBook(idBook, content) {

@@ -9,6 +9,7 @@ const { routerTypeBook } = require('./controllers/typeBook.router');
 const { routerUser } = require('./controllers/user.router');
 const { routerPublisher } = require('./controllers/publisher.router');
 const { routerBorrow } = require('./controllers/borrow.router');
+const { mustBeUser }  = require('./helpers/mustBeUser');
 const app = express();
 
 app.use(json());
@@ -29,5 +30,5 @@ app.use('/card', routerCard);
 app.use('/typebook',routerTypeBook);
 app.use('/user',routerUser);
 app.use('/publisher',routerPublisher);
-app.use('/',routerBorrow);
+app.use('/borrow',routerBorrow);
 module.exports = { app };
