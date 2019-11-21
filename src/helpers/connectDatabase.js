@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 function getDatabaseUri() {
-    if (process.env.NODE_ENV === 'production')
-        return 'mongodb://phanthinhphu:phanthinhphu147@ds219055.mlab.com:19055/library';
-    return 'mongodb://localhost:27017/manageLibrary';
-    //return 'mongodb+srv://test:phu123@phanphu-ktiiq.mongodb.net/test?retryWrites=true&w=majority';
+    // if (process.env.NODE_ENV === 'production')
+    //     return 'mongodb://phanthinhphu:phanthinhphu147@ds219055.mlab.com:19055/library';
+    // return 'mongodb://localhost:27017/manageLibrary';
+    return 'mongodb://phanthinhphu:phanthinhphu147@ds219055.mlab.com:19055/library';
 }
 mongoose.set('useFindAndModify', false);
 mongoose.connect(getDatabaseUri(), {
