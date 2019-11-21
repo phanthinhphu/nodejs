@@ -1,7 +1,7 @@
 const { User } = require('../models/user.model');
 const { MyError } = require('../helpers/myError');
 const { checkObjectId } = require('../helpers/checkObjectId');
-const { hash, compare } = require('bcrypt');
+const { hash, compare } = require('bcryptjs');
 const { UserValidate } = require('../validates/user.validate');
 const { sign, verify } = require('../helpers/jwt');
 class UserService {
