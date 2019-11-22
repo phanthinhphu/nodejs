@@ -1,2 +1,2 @@
 node_modules
-src/helpers/connectDatabase
+src/helpers/connectDatabase.js
