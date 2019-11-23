@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 function getDatabaseUri() {
+    // if (process.env.NODE_ENV === 'production1')
+    //     return 'mongodb://phanthinhphu:phanthinhphu147@ds219055.mlab.com:19055/library';
     return 'mongodb://localhost:27017/manageLibrary';
 }
 mongoose.set('useFindAndModify', false);
